@@ -13,3 +13,21 @@ annotation [
     M: transmembran
     O: extracellular
 ]
+
+
+Kingdom distribution:
+EUKARYA     16396
+NEGATIVE     2764
+POSITIVE      935
+ARCHAEA       195
+
+
+Type distribution:
+NO_SP      15625
+SP          2582 (S)
+LIPO        1615 (L)
+TAT          365 (T)
+PILIN         70 (P)
+TATLIPO       33 (T)
+
+
