@@ -15,8 +15,8 @@ def load_data(path):
             seq = " ".join(seq)
             ac, kingdom, type_ = header.split("|")[:3]
             ds[i] = {
-                'sequence': seq,
-                'label': sep,
+                'text': seq,
+                'labels': sep,
                 'uniprot_ac': ac,
                 'kingdom': kingdom,
                 'type': type_,
@@ -35,18 +35,17 @@ class SPFastaDataset(AbstractFastaDataset):
         data = load_data(path)
         self.data = pd.DataFrame(data)
 
-
 class SPFastaDatasetBinary(AbstractFastaDataset):
     def __init__(self, path) -> None:
         data = load_data(path)
         for x in tqdm(data):
-            x['label'] = 0. if x['type'] == 'NO_SP' else 1.
+            x['labels'] = 0 if x['type'] == 'NO_SP' else 1
         self.data = pd.DataFrame(data)
 
 class SPFastaDatasetBinaryWithTokenizedCategory(AbstractFastaDataset):
     def __init__(self, path) -> None:
         data = load_data(path)
         for x in tqdm(data):
-            x['label'] = 0. if x['type'] == 'NO_SP' else 1.
-            x['sequence'] = " ".join(x['kingdom']) + " [SEP] " + x['sequence']
+            x['labels'] = 0 if x['type'] == 'NO_SP' else 1
+            x['text'] = " ".join(x['kingdom']) + " [SEP] " + x['text']
         self.data = pd.DataFrame(data)
