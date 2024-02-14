@@ -9,6 +9,7 @@ __pycache__/
 *.pth
 *.pt
 *.state
+model/checkpoint*
 
 # Distribution / packaging
 .Python
