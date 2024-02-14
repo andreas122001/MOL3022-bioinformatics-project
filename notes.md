@@ -4,6 +4,9 @@ https://services.healthtech.dtu.dk/services/SignalP-6.0/
 GitHub
 https://github.com/Dumitrescu-Alexandru/TSignal
 
+MixedData notebook example
+https://colab.research.google.com/drive/1ZLfcB16Et9U2V-udrw8zwrfChFCIhomz?usp=sharing#scrollTo=2gNmynWqdllx
+
 annotation [
     S: Sec/SPI signal peptide
     T: Tat/SPI or Tat/SPII signal peptide
