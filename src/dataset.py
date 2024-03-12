@@ -42,6 +42,21 @@ class SPFastaDatasetBinary(AbstractFastaDataset):
             x['labels'] = 0 if x['type'] == 'NO_SP' else 1
         self.data = pd.DataFrame(data)
 
+class SPFastaDatasetMultiLabel(AbstractFastaDataset):
+    label2id = {
+        'NO_SP': 0, 
+        'SP': 1,
+        'LIPO': 2,
+        'TAT': 3,
+        'TATLIPO': 4,
+        'PILIN': 5,
+    }
+    def __init__(self, path) -> None:
+        data = load_data(path)
+        for x in tqdm(data):
+            x['labels'] = self.label2id[x['type']]
+        self.data = pd.DataFrame(data)
+
 class SPFastaDatasetBinaryWithTokenizedCategory(AbstractFastaDataset):
     def __init__(self, path) -> None:
         data = load_data(path)
