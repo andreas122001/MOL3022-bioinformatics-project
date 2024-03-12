@@ -1,19 +1,32 @@
 import aiohttp
 import asyncio
 import time
+import sys
+import numpy as np
+
+n = int(sys.argv[1]) if len(sys.argv) > 1 else 100
 
 # Define your API endpoint
 url = "http://localhost:8080/inference"
 
+data = None
+with open("./data/examples.fasta") as f:
+    data = f.read()
+    data = data.split(">")
+    data = [d for d in data if d]
+    data = [{ 'header': ">"+d.split("\n")[0], 'sequence': d.split("\n")[1] } for d in data]
+
 # Create a list of JSON payloads
-payloads = [
-    {
-        "header": ">Q8TF40|EUKARYA|NO_SP|0",
-        "sequence": "MAPTLFQKLFSKRTGLGAPGRDARDPDCGFSWPLPEFDPSQIRLIVYQDCERRGRNVLFDSSVKRRNEDI",
-        "threshold": 0.6
-    }
-    # Add more payloads as needed
-]*100
+if not data:
+    payloads = [
+        {
+            "header": ">EUKARYA",
+            "sequence": "MAPTLFQKLFSKRTGLGAPGRDARDPDCGFSWPLPEFDPSQIRLIVYQDCERRGRNVLFDSSVKRRNEDI",
+        }
+        # Add more payloads as needed
+    ]*n
+else:
+    payloads = np.random.choice(data, n)
 
 async def send_request(session, payload):
     start_time = time.time()
