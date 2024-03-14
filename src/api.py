@@ -7,15 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from concurrent.futures import ProcessPoolExecutor
 
-_threshold = 0.7
 _classifier = None
 _tokenizer = None
-
 
 class FastaData(BaseModel):
     header: str
     sequence: str
-    # threshold: float = _threshold
 
 app = FastAPI()
 
@@ -71,6 +68,8 @@ def hello_world():
 def preprocess(data):
     global _tokenizer
 
+    # >EUKARYA|SJWUS12|sad2|w82
+
     # TODO: auto-find kingdom or enforce idx 0
     kingdom = data.header[1:].split("|")[0]
     sequence = data.sequence
@@ -90,7 +89,6 @@ async def post_inference(request: FastaData) -> Dict:
 
     loop = asyncio.get_event_loop()
     result = await loop.create_task(model_predict(tokenized_data))
-
 
     return result
 
