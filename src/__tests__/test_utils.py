@@ -2,9 +2,10 @@
 Testing utils.py
 """
 
+import pytest
 from starlette.testclient import TestClient
 
-from utils import init_app
+from utils import init_app, init_model, not_completed
 
 
 def test_init_app():
@@ -85,3 +86,45 @@ def test_hello_world():
     response = client.get("/hello")
     assert response.status_code == 200
     assert response.json() == {"message": "Hello, World!"}
+
+
+def test_not_completed():
+    """
+    Testing the not_completed decorator.
+    """
+
+    @not_completed
+    def dummy_function():
+        pass
+
+    with pytest.warns(UserWarning) as record:
+        dummy_function()
+
+    assert len(record) == 1
+    assert "'dummy_function' is marked as not completed" in str(record[0].message)
+
+
+def test_init_model() -> None:
+    """
+    Testing the init_model function.
+    """
+    classifier, tokenizer = init_model()
+
+    assert classifier.num_labels == 2
+    assert (
+        classifier.device.type == "cuda" if classifier.device.type == "cuda" else "cpu"
+    )
+
+    assert tokenizer.pad_token_id == 0
+    assert len(tokenizer.added_tokens_decoder) == 5
+
+    list_tokens: list[str] = [
+        "[PAD]",
+        "[CLS]",
+        "[SEP]",
+        "[UNK]",
+        "[MASK]",
+    ]
+
+    for _, decoder in tokenizer.added_tokens_decoder.items():
+        assert decoder.content in list_tokens
