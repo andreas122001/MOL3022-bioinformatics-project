@@ -11,6 +11,8 @@ Example:
     app = init_app()
 """
 
+from typing import Dict
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -37,5 +39,22 @@ def init_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    @app.get("/")
+    def running():
+
+        return {"message": "Running Hello, World!"}
+
+    @app.get("/hello")
+    def hello_world() -> Dict[str, str]:
+        r"""
+        A function that prints "Hello, World!" and returns a dictionary with a message.
+        This for debugging purposes.
+
+        Returns:
+            dict: A dictionary with a single key "message" and value "Hello, World!".
+        """
+        print("Hello, World!")
+        return {"message": "Hello, World!"}
 
     return app

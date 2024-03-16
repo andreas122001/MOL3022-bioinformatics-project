@@ -38,19 +38,6 @@ async def model_predict(data: Dict) -> Dict[float, float]:
     return {"no_sp": prediction[0].item(), "sp": prediction[1].item()}
 
 
-@app.get("/hello")
-def hello_world() -> Dict[str, str]:
-    r"""
-    A function that prints "Hello, World!" and returns a dictionary with a message.
-    This for debugging purposes.
-
-    Returns:
-        dict: A dictionary with a single key "message" and value "Hello, World!".
-    """
-    print("Hello, World!")
-    return {"message": "Hello, World!"}
-
-
 def preprocess(data) -> BatchEncoding:
     r"""
     Preprocesses the input data by tokenizing the kingdom and sequence.
