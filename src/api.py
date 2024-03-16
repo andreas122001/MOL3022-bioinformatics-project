@@ -20,7 +20,7 @@ pool = ProcessPoolExecutor(max_workers=1, initializer=init_model)
 
 
 async def model_predict(data: Dict) -> Dict[float, float]:
-    """
+    r"""
     Predicts the probabilities of two classes using a pre-trained classifier model.
 
     Args:
@@ -40,7 +40,7 @@ async def model_predict(data: Dict) -> Dict[float, float]:
 
 @app.get("/hello")
 def hello_world() -> Dict[str, str]:
-    """
+    r"""
     A function that prints "Hello, World!" and returns a dictionary with a message.
     This for debugging purposes.
 
@@ -80,7 +80,7 @@ def preprocess(data) -> BatchEncoding:
 
 @app.post("/inference")
 async def post_inference(request: FastaData) -> Dict:
-    """
+    r"""
     Perform inference on the given FASTA data.
 
     Args:
@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
 @not_completed
 class BatchScheduler:
-    """
+    r"""
     A class that manages batch scheduling of tasks.
 
     Attributes:
@@ -130,15 +130,15 @@ class BatchScheduler:
     processor = lambda x: x  # TODO: remove the lambda and add the actual function
 
     def run_tasks(self):
-        """
+        r"""
         Executes the tasks using the processor.
 
         This method executes the tasks stored in the `tasks` attribute using the `processor` method.
         """
         self.processor(self.tasks)
 
-    def add_task(self, task: Any):
-        """
+    def add_task(self, task: Any) -> None:
+        r"""
         Add a task to the task list.
 
         Parameters:

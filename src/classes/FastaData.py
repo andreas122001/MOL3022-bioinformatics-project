@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class FastaData(BaseModel):
-    """
+    r"""
     Represents a FASTA data object.
 
     Attributes:

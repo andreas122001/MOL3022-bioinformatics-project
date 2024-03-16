@@ -6,7 +6,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 
 def init_model():
-    """
+    r"""
     Initializes the model and tokenizer for signal peptide prediction.
 
     Returns:
