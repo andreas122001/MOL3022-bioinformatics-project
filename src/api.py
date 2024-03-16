@@ -52,7 +52,7 @@ def hello_world() -> Dict[str, str]:
 
 
 def preprocess(data) -> BatchEncoding:
-    """
+    r"""
     Preprocesses the input data by tokenizing the kingdom and sequence.
 
     Args:
