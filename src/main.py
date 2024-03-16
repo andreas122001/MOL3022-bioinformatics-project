@@ -1,15 +1,12 @@
-import re
-
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import torch
-import torch.utils.data as data_utils
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
 
 def load_data():
+    """
+    The function to load the data from the file.
+    """
     ds = []
     # Read from src
     with open("data/train_set.fasta") as f:
@@ -35,6 +32,10 @@ def load_data():
 
 
 class SPDatasetBinary(Dataset):
+    """
+    Custom dataset class for the signal peptide prediction task.
+    """
+
     def __init__(self, path) -> None:
         super().__init__()
 
