@@ -1,72 +1,67 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from transformers import AutoModelForSequenceClassification, AutoTokenizer
-from typing import Any, List, Dict
+"""
+The main api
+"""
+
 import asyncio
-from fastapi.middleware.cors import CORSMiddleware
-
 from concurrent.futures import ProcessPoolExecutor
+from typing import Any, Dict, LiteralString
 
-_classifier = None
-_tokenizer = None
+from fastapi import FastAPI
+from transformers.tokenization_utils_base import BatchEncoding
 
-class FastaData(BaseModel):
-    header: str
-    sequence: str
+from classes import FastaData
+from utils import init_app, init_model
 
-app = FastAPI()
+CLASSIFIER, TOKENIZER = init_model()
 
-origins = [
-    "http://localhost",
-    "http://localhost:8080",
-    "http://localhost:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-def init_model():
-    global _classifier, _tokenizer
-    _classifier = AutoModelForSequenceClassification.from_pretrained("andreas122001/mol3022-signal-peptide-prediction")
-    _tokenizer = AutoTokenizer.from_pretrained("andreas122001/mol3022-signal-peptide-prediction")
-    print("MODEL INITIALIZED")
-
-init_model()
-
+app: FastAPI = init_app()
 
 pool = ProcessPoolExecutor(max_workers=1, initializer=init_model)
 
 
-async def model_predict(data: Dict) -> Dict[float,float]:
-    global _classifier
+async def model_predict(data: Dict) -> Dict[float, float]:
+    """
+    Predicts the probabilities of two classes using a pre-trained classifier model.
 
-    prediction = _classifier(**data) \
-                    .logits \
-                    .flatten() \
-                    .softmax(-1) \
-                    .cpu() \
-                    .detach() \
-                    .numpy()
+    Args:
+        data (Dict): A dictionary containing the input data for prediction.
 
-    return {
-        'no_sp': prediction[0].item(),
-        'sp'   : prediction[1].item()
-    }
+    Returns:
+        Dict[float, float]: A dictionary containing the predicted probabilities for each class.
+            The keys represent the class labels, and the values represent the corresponding probabilities.
+    """
+    global CLASSIFIER
+
+    prediction = CLASSIFIER(**data).logits.flatten().softmax(-1).cpu().detach().numpy()
+
+    return {"no_sp": prediction[0].item(), "sp": prediction[1].item()}
+
 
 @app.get("/hello")
-def hello_world():
-    print("Hello, World!")
-    return {
-        "message": "Hello, World!"
-    }
+def hello_world() -> Dict[str, str]:
+    """
+    A function that prints "Hello, World!" and returns a dictionary with a message.
+    This for debugging purposes.
 
-def preprocess(data):
-    global _tokenizer
+    Returns:
+        dict: A dictionary with a single key "message" and value "Hello, World!".
+    """
+    print("Hello, World!")
+    return {"message": "Hello, World!"}
+
+
+def preprocess(data) -> BatchEncoding:
+    """
+    Preprocesses the input data by tokenizing the kingdom and sequence.
+
+    Args:
+        data: The input data containing the header and sequence.
+
+    Returns:
+        The tokenized features as a BatchEncoding object.
+    """
+
+    global TOKENIZER
 
     # >EUKARYA|SJWUS12|sad2|w82
 
@@ -74,30 +69,41 @@ def preprocess(data):
     kingdom = data.header[1:].split("|")[0]
     sequence = data.sequence
 
-    feats = " ".join(list(kingdom)) + " [SEP] " + " ".join(list(sequence))
-    tokenized_feats = _tokenizer(feats, return_tensors="pt")
+    feats: LiteralString = (
+        " ".join(list(kingdom)) + " [SEP] " + " ".join(list(sequence))
+    )
+    tokenized_feats: BatchEncoding = TOKENIZER(feats, return_tensors="pt")
 
     return tokenized_feats
 
 
-
 @app.post("/inference")
 async def post_inference(request: FastaData) -> Dict:
+    """
+    Perform inference on the given FASTA data.
+
+    Args:
+        request (FastaData): The FASTA data to perform inference on.
+
+    Returns:
+        Dict: A dictionary containing the inference results.
+    """
     print(request)
 
-    tokenized_data = preprocess(request)
+    tokenized_data: BatchEncoding = preprocess(request)
 
-    loop = asyncio.get_event_loop()
-    result = await loop.create_task(model_predict(tokenized_data))
+    loop: asyncio.AbstractEventLoop = asyncio.get_event_loop()
+    result: Dict[float, float] = await loop.create_task(
+        coro=model_predict(data=tokenized_data)
+    )
 
     return result
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, port=8080)
-
-
 
 
 class BatchScheduler:
@@ -113,5 +119,3 @@ class BatchScheduler:
         if len(self.tasks) >= self.max_tasks:
             self.should_run = True
         self.tasks.append(task)
-        
-        
