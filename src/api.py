@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from transformers.tokenization_utils_base import BatchEncoding
 
 from classes import FastaData
-from utils import init_app, init_model
+from utils import init_app, init_model, not_completed
 
 CLASSIFIER, TOKENIZER = init_model()
 
@@ -28,7 +28,8 @@ async def model_predict(data: Dict) -> Dict[float, float]:
 
     Returns:
         Dict[float, float]: A dictionary containing the predicted probabilities for each class.
-            The keys represent the class labels, and the values represent the corresponding probabilities.
+            The keys represent the class labels, and the values represent
+            the corresponding probabilities.
     """
     global CLASSIFIER
 
@@ -106,16 +107,46 @@ if __name__ == "__main__":
     uvicorn.run(app, port=8080)
 
 
+@not_completed
 class BatchScheduler:
+    """
+    A class that manages batch scheduling of tasks.
+
+    Attributes:
+        tasks (list): A list of tasks to be processed.
+        max_tasks (int): The maximum number of tasks that can be added to the scheduler.
+        should_run (bool): Indicates whether the scheduler should start running the tasks.
+        processor (function): The function used to process the tasks.
+
+    Methods:
+        run_tasks(): Runs the tasks using the processor function.
+        add_task(task: Any): Adds a task to the scheduler.
+
+    """
+
     tasks = []
     max_tasks = 8
     should_run = False
-    processor = None
+    processor = lambda x: x  # TODO: remove the lambda and add the actual function
 
     def run_tasks(self):
+        """
+        Executes the tasks using the processor.
+
+        This method executes the tasks stored in the `tasks` attribute using the `processor` method.
+        """
         self.processor(self.tasks)
 
     def add_task(self, task: Any):
+        """
+        Add a task to the task list.
+
+        Parameters:
+        - task (Any): The task to be added.
+
+        Returns:
+        None
+        """
         if len(self.tasks) >= self.max_tasks:
             self.should_run = True
         self.tasks.append(task)
