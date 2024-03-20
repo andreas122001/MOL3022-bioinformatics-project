@@ -4,7 +4,7 @@ The main api
 
 import asyncio
 from concurrent.futures import ProcessPoolExecutor
-from typing import Any, Dict, LiteralString
+from typing import Any, Dict
 
 from fastapi import FastAPI
 from transformers.tokenization_utils_base import BatchEncoding
@@ -57,7 +57,7 @@ def preprocess(data) -> BatchEncoding:
     kingdom = data.header[1:].split("|")[0]
     sequence = data.sequence
 
-    feats: LiteralString = (
+    feats: str = (
         " ".join(list(kingdom)) + " [SEP] " + " ".join(list(sequence))
     )
     tokenized_feats: BatchEncoding = TOKENIZER(feats, return_tensors="pt")
@@ -93,47 +93,3 @@ if __name__ == "__main__":
 
     uvicorn.run(app, port=8080)
 
-
-@not_completed
-class BatchScheduler:
-    r"""
-    A class that manages batch scheduling of tasks.
-
-    Attributes:
-        tasks (list): A list of tasks to be processed.
-        max_tasks (int): The maximum number of tasks that can be added to the scheduler.
-        should_run (bool): Indicates whether the scheduler should start running the tasks.
-        processor (function): The function used to process the tasks.
-
-    Methods:
-        run_tasks(): Runs the tasks using the processor function.
-        add_task(task: Any): Adds a task to the scheduler.
-
-    """
-
-    tasks = []
-    max_tasks = 8
-    should_run = False
-    processor = lambda x: x  # TODO: remove the lambda and add the actual function
-
-    def run_tasks(self):
-        r"""
-        Executes the tasks using the processor.
-
-        This method executes the tasks stored in the `tasks` attribute using the `processor` method.
-        """
-        self.processor(self.tasks)
-
-    def add_task(self, task: Any) -> None:
-        r"""
-        Add a task to the task list.
-
-        Parameters:
-        - task (Any): The task to be added.
-
-        Returns:
-        None
-        """
-        if len(self.tasks) >= self.max_tasks:
-            self.should_run = True
-        self.tasks.append(task)
