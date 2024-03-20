@@ -10,7 +10,7 @@ parser.add_argument("-f", "--file", help="The path of the file you want to predi
 parser.add_argument("-o", "--output", help="The path to the output file.", type=str)
 parser.add_argument("-b", "--batch_size", help="Batch size used for prediction. Default is 8. If prediction is very slow or fails, try lowering it.", default=8, type=int)
 parser.add_argument("-v", "--verbose", help="Shows progress bar and outputs SPs when writing to file. Default is not verbose.", action=argparse.BooleanOptionalAction)
-parser.add_argument("-t", "--threshold", help=f"Threshold for prediction. Prediction confidence must be over threshold to be considered positive. Default is 95%% confidence.", default=0.95, type=float)
+parser.add_argument("-t", "--threshold", help=f"Threshold for prediction. Prediction confidence must be over threshold to be considered positive. Default is 90%% confidence.", default=0.90, type=float)
 args = parser.parse_args()
 
 

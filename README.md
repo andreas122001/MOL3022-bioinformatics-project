@@ -79,6 +79,6 @@ options:
                         Shows progress bar and outputs SPs when writing to file. Default is not verbose.
   -t THRESHOLD, --threshold THRESHOLD
                         Threshold for prediction. Prediction confidence must be over threshold to be considered
-                        positive. Default is 95% confidence.
+                        positive. Default is 90% confidence.
 ```
 
