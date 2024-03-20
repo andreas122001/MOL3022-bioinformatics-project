@@ -1,6 +1,6 @@
 # MOL3022-bioinformatics-project
 
-This repository is related to a project in the course *MOL3022 Bioinformatics - Method Oriented Project* and contains the code for the backend application and for trainig and testing the machine learning model.
+This repository is related to a project in the course *MOL3022 Bioinformatics - Method Oriented Project* and contains the code for the backend application and for training and testing the machine learning model.
 
 The model training and testing can be found in the notebooks `training.ipynb` and `testing.ipynb`, respectively.
 
@@ -24,7 +24,7 @@ Example data in the correct format is provided in `data/examples_small.fasta` an
 ## Usage
 
 ### Requirements
-This project assumes you have python installed on your machine.
+This project assumes you have Python installed on your machine.
 
 To install requirements, do:
 
@@ -64,7 +64,7 @@ Usage of the CLI can be seen below:
 ```txt
 usage: sp_predict [-h] -f FILE [-o OUTPUT] [-b BATCH_SIZE] [-v | --verbose | --no-verbose] [-t THRESHOLD]
 
-Predicts if a protein sequence has a singal peptide or not. It writes a .fasta file, adds a header to it with the
+Predicts if a protein sequence has a signal peptide or not. It writes a .fasta file, and adds a header to it with the
 prediction and outputs it.
 
 options:
