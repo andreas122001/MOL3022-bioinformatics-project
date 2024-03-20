@@ -42,7 +42,7 @@ To run the backend:
 python src/api.py
 ```
 
-This will automatically download the machine learning model and run it on the backend server.
+This will automatically download the machine learning model, if it is not already on your machine, and run it on the backend server.
 
 See [frontend repo](https://github.com/Senja20/mol-3022-front-end-application) for instructions on how to run the frontend.
 
@@ -58,6 +58,10 @@ python src/cli.py --file data/examples_small.fasta
 ```
 
 This will also automatically download the machine learning model, but will only run it on the provided dataset. You can test it out using the example data.
+
+You can also see the video guide:
+
+https://github.com/andreas122001/MOL3022-bioinformatics-project/assets/70771608/e2964160-7a9d-4e27-bdd5-b655587ee75c
 
 Usage of the CLI can be seen below:
 
